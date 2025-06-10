@@ -87,7 +87,12 @@
       border-radius: 4px;
       cursor: pointer;
       user-select: none;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    input[type="submit"].clicked {
+      transform: scale(0.94);
+      background: #0e5dc2;
     }
 
     input[type="submit"]:hover {
@@ -112,13 +117,6 @@
       left: 0;
       transform: translate(-50%, -50%);
       z-index: 1000;
-    }
-
-    /* Click animation class */
-    .clicked {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.3);
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
   </style>
 </head>
@@ -147,7 +145,7 @@
     <div id="message"></div>
   </div>
   <img id="mouse" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABQ0lEQVR4nO3WvUoDQRDA8T8YwUpsoomdoAGfwcoUPoClIGIjCD6Cr5DKLkW6VCmt0omVdfyKhZ3YRezEiIwszMFwXEzEm90mA8ve7hTzY469PZjHbFElcTwC6ykBoohaSoAAT6k6IWYMUyDEvIYwPwBrKQCrwJ3pRD02AEXcxkaIASRBSA4QHSEFgKgImQDIEANzSuqxAdld4YqQKQB3hMwAKELUYgPcEPIHgAtCfgGEO+EMaAE94AZ4zV1gg//+1EgBYBs4BJaAl1zBMD7029AH2sB+mYA94B0YAcvAqebfgB3vY3gCjM3eObAIPOv6oOzimGIX5vlS56wLx+avaYGSQ8wYaxdCXJsuVLR4WB95AUZA0+w3zX7ozqeu7z0AQ2CrIHdlgF9AB9goG9AHVibkdoFvoAs0cIrKlPymV+F54B0/ZzKLTWXLKTUAAAAASUVORK5CYII=" alt="mouse cursor" />
-
+  
   <script>
     const form = document.getElementById('lmgtfy-form');
     const input = document.getElementById('input');
@@ -182,20 +180,24 @@
 
       message.innerText = '2. Adım: Arama kutusuna yazılıyor...';
       await typeText(input, query, 200);
-
       await sleep(500);
 
       message.innerText = '3. Adım: Arama yapılıyor...';
+      const submitButton = form.querySelector('input[type="submit"]');
+      await moveMouseTo(submitButton);
 
-      const button = form.querySelector('input[type="submit"][name="btnK"]');
-      await moveMouseTo(button);
-
-      button.classList.add('clicked');
+      // Buton tıklama efekti
+      submitButton.classList.add('clicked');
       await sleep(200);
-      button.classList.remove('clicked');
+      submitButton.classList.remove('clicked');
+
+      // Panoya kopyala
+      const finalURL = window.location.origin + window.location.pathname + "?q=" + encodeURIComponent(query);
+      await navigator.clipboard.writeText(finalURL);
+      message.innerText = "🔗 Link panoya kopyalandı!";
+      await sleep(1200);
 
       message.innerText = 'Bu kadar zor muydu?';
-
       await sleep(1500);
 
       window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
@@ -211,10 +213,11 @@
       startSequence(query);
     });
 
+    // ?q= varsa otomatik başlat
     const params = new URLSearchParams(window.location.search);
     const q = params.get('q');
-    if (q) {
-      startSequence(q);
+    if (q && q.trim()) {
+      startSequence(q.trim());
     }
   </script>
 </body>
