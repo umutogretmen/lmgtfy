@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LMGTFY Klon</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f8f9fa;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      width: 90vw;
+      max-width: 600px;
+      box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1#logo {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      user-select: none;
+      font-family: 'Arial Black', Arial, sans-serif;
+    }
+
+    .g { color: #4285F4; }
+    .r { color: #DB4437; }
+    .y { color: #F4B400; }
+    .b { color: #4285F4; }
+    .g2 { color: #0F9D58; }
+    .r2 { color: #DB4437; }
+
+    .creator {
+      display: inline-block;
+      font-size: 1rem;
+      color: #555;
+      margin-left: 12px;
+      vertical-align: bottom;
+      font-weight: normal;
+    }
+
+    form {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1.1rem;
+      border: 2px solid #dadce0;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+      min-width: 0;
+    }
+
+    input[type="text"]:focus {
+      border-color: #1a73e8;
+      outline: none;
+    }
+
+    input[type="submit"] {
+      background: #1a73e8;
+      border: none;
+      color: white;
+      padding: 0 1.5rem;
+      font-size: 1.1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background: #1669c1;
+    }
+
+    #message {
+      font-size: 1.25rem;
+      color: #202124;
+      min-height: 2.5rem;
+      user-select: none;
+    }
+
+    #mouse {
+      position: fixed;
+      width: 32px;
+      height: 32px;
+      pointer-events: none;
+      user-select: none;
+      transition: top 1.2s ease, left 1.2s ease;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="logo">
+  <span class="g">L</span>
+  <span class="r">M</span>
+  <span class="y">G</span>
+  <span class="b">T</span>
+  <span class="g2">F</span>
+  <span class="r2">Y</span>
+  <span class="creator">created by UMUT</span>
+     </h1>
+    <form id="lmgtfy-form" autocomplete="off">
+      <input
+        id="input"
+        name="q"
+        type="text"
+        placeholder="Aramak istediğiniz şeyi yazın..."
+        autocomplete="off"
+        autofocus
+      />
+      <input type="submit" name="btnK" value="Google'da Ara" />
+    </form>
+    <div id="message"></div>
+  </div>
+  <img id="mouse" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABQ0lEQVR4nO3WvUoDQRDA8T8YwUpsoomdoAGfwcoUPoClIGIjCD6Cr5DKLkW6VCmt0omVdfyKhZ3YRezEiIwszMFwXEzEm90mA8ve7hTzY469PZjHbFElcTwC6ykBoohaSoAAT6k6IWYMUyDEvIYwPwBrKQCrwJ3pRD02AEXcxkaIASRBSA4QHSEFgKgImQDIEANzSuqxAdld4YqQKQB3hMwAKELUYgPcEPIHgAtCfgGEO+EMaAE94AZ4zV1gg//+1EgBYBs4BJaAl1zBMD7029AH2sB+mYA94B0YAcvAqebfgB3vY3gCjM3eObAIPOv6oOzimGIX5vlS56wLx+avaYGSQ8wYaxdCXJsuVLR4WB95AUZA0+w3zX7ozqeu7z0AQ2CrIHdlgF9AB9goG9AHVibkdoFvoAs0cIrKlPymV+F54B0/ZzKLTWXLKTUAAAAASUVORK5CYII=" alt="mouse cursor" />
+  
+  <script>
+    const form = document.getElementById('lmgtfy-form');
+    const input = document.getElementById('input');
+    const mouse = document.getElementById('mouse');
+    const message = document.getElementById('message');
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function moveMouseTo(target) {
+      const rect = target.getBoundingClientRect();
+      mouse.style.top = `${rect.top + rect.height / 2}px`;
+      mouse.style.left = `${rect.left + rect.width / 2}px`;
+      await sleep(1400);
+    }
+
+    async function typeText(element, text, delay) {
+      element.value = '';
+      for (let i = 0; i < text.length; i++) {
+        element.value += text[i];
+        await sleep(delay);
+      }
+    }
+
+    async function startSequence(query) {
+      message.innerText = '1. Adım: Google açılıyor...';
+      await sleep(1500);
+
+      await moveMouseTo(input);
+      input.focus();
+
+      message.innerText = '2. Adım: Arama kutusuna yazılıyor...';
+      await typeText(input, query, 200);
+
+      await sleep(500);
+
+      message.innerText = '3. Adım: Arama yapılıyor...';
+
+      await moveMouseTo(form.querySelector('input[type="submit"][name="btnK"]'));
+
+      await sleep(1000);
+
+      message.innerText = 'Bu kadar zor muydu?';
+
+      await sleep(1500);
+
+      window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const query = input.value.trim();
+      if (!query) {
+        alert('Lütfen bir arama terimi girin.');
+        return;
+      }
+      startSequence(query);
+    });
+
+    // URL parametre ?q= varsa otomatik başlat
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) {
+      input.value = q;
+      startSequence(q);
+    }
+  </script>
+</body>
+</html>
