@@ -113,19 +113,26 @@
       transform: translate(-50%, -50%);
       z-index: 1000;
     }
+
+    /* Click animation class */
+    .clicked {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.3);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1 id="logo">
-  <span class="g">L</span>
-  <span class="r">M</span>
-  <span class="y">G</span>
-  <span class="b">T</span>
-  <span class="g2">F</span>
-  <span class="r2">Y</span>
-  <span class="creator">created by UMUT</span>
-     </h1>
+      <span class="g">L</span>
+      <span class="r">M</span>
+      <span class="y">G</span>
+      <span class="b">T</span>
+      <span class="g2">F</span>
+      <span class="r2">Y</span>
+      <span class="creator">created by UMUT</span>
+    </h1>
     <form id="lmgtfy-form" autocomplete="off">
       <input
         id="input"
@@ -140,7 +147,7 @@
     <div id="message"></div>
   </div>
   <img id="mouse" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABQ0lEQVR4nO3WvUoDQRDA8T8YwUpsoomdoAGfwcoUPoClIGIjCD6Cr5DKLkW6VCmt0omVdfyKhZ3YRezEiIwszMFwXEzEm90mA8ve7hTzY469PZjHbFElcTwC6ykBoohaSoAAT6k6IWYMUyDEvIYwPwBrKQCrwJ3pRD02AEXcxkaIASRBSA4QHSEFgKgImQDIEANzSuqxAdld4YqQKQB3hMwAKELUYgPcEPIHgAtCfgGEO+EMaAE94AZ4zV1gg//+1EgBYBs4BJaAl1zBMD7029AH2sB+mYA94B0YAcvAqebfgB3vY3gCjM3eObAIPOv6oOzimGIX5vlS56wLx+avaYGSQ8wYaxdCXJsuVLR4WB95AUZA0+w3zX7ozqeu7z0AQ2CrIHdlgF9AB9goG9AHVibkdoFvoAs0cIrKlPymV+F54B0/ZzKLTWXLKTUAAAAASUVORK5CYII=" alt="mouse cursor" />
-  
+
   <script>
     const form = document.getElementById('lmgtfy-form');
     const input = document.getElementById('input');
@@ -180,9 +187,12 @@
 
       message.innerText = '3. Adım: Arama yapılıyor...';
 
-      await moveMouseTo(form.querySelector('input[type="submit"][name="btnK"]'));
+      const button = form.querySelector('input[type="submit"][name="btnK"]');
+      await moveMouseTo(button);
 
-      await sleep(1000);
+      button.classList.add('clicked');
+      await sleep(200);
+      button.classList.remove('clicked');
 
       message.innerText = 'Bu kadar zor muydu?';
 
@@ -201,11 +211,9 @@
       startSequence(query);
     });
 
-    // URL parametre ?q= varsa otomatik başlat
     const params = new URLSearchParams(window.location.search);
     const q = params.get('q');
     if (q) {
-      input.value = q;
       startSequence(q);
     }
   </script>
